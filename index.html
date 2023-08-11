@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulario de Autenticación</title>
+</head>
+<body>
+    <h1>Formulario de Autenticación</h1>
+    <form id="formulario" action="http://localhost/ELIASIB-CANTOR-AA5-EV01/api.php" method="POST">
+        <label for="usuario">Usuario:</label>
+        <input type="text" id="usuario" name="usuario" required><br><br>
+        
+        <label for="contrasena">Contraseña:</label>
+        <input type="password" id="contrasena" name="contrasena" required><br><br>
+        
+        <input type="submit" value="Iniciar Sesión">
+    </form>
+
+    <div id="respuesta"></div>
+
+    <script>
+        const formulario = document.getElementById('formulario');
+        const respuestaDiv = document.getElementById('respuesta');
+
+        formulario.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(formulario);
+            const data = {
+                usuario: formData.get('usuario'),
+                contrasena: formData.get('contrasena')
+            };
+
+            try {
+                const response = await fetch('http://localhost/ELIASIB-CANTOR-AA5-EV01/api.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const responseData = await response.json();
+                if (response.ok) {
+                    respuestaDiv.innerHTML = `<p>${responseData.mensaje}</p>`;
+                } else {
+                    respuestaDiv.innerHTML = `<p>Error: ${responseData.error}</p>`;
+                }
+            } catch (error) {
+                respuestaDiv.innerHTML = `<p>Error en la solicitud</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
